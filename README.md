@@ -7,7 +7,7 @@
 
 ## 仓库结构
 
-需要编译的 Artifacts 包括 opensbi 固件、 normal Linux镜像和secure Linux镜像。
+需要编译的 Artifacts 包括 opensbi 固件、 normal Linux minimal镜像和secure Linux镜像。
 
 
 ## 运行测试
@@ -23,7 +23,9 @@ git submodule update --init --recursive
 
 确保本地有相关的交叉编译工具，脚本中默认使用riscv64-linux-gnu-gcc(gcc version 11.4.0)
 
-主要的编译指令都已通过脚本实现，进入工作目录`penglai-eswin`按照如下指令依次运行
+主要的编译指令都已通过脚本实现，进入工作目录`penglai-eswin`按照如下指令依次运行实现在本地编译。
+
+也可使用提供的已经编译完成进行直接[烧录启动](#镜像烧录启动)，预编译镜像下载链接：https://ipads.se.sjtu.edu.cn:1313/d/616ab288e0154390856e/
 
 ### 编译opensbi固件
 
@@ -60,9 +62,10 @@ linux-libc-dev_6.6.18-{build_date}+_riscv64.deb
 
 ### 编译secure linux
 
-
+需要提供一个secure Linux的文件系统镜像，可以通过链接（ https://ipads.se.sjtu.edu.cn:1313/f/c0ec5102ece64f6dabb4/ ） 下载
 ```bash
 cd ${WORK_DIR}
+wget -O rootfs.cpio.gz https://ipads.se.sjtu.edu.cn:1313/f/c0ec5102ece64f6dabb4/?dl=1
 cp rootfs.cpio.gz ${WORK_DIR}/source/secure-linux-eswin/rootfs.cpio.gz
 make_secure_kernel
 ```
@@ -93,6 +96,39 @@ root-HF106-{build_date}-{build_tiem}.ext4
 
 参考文档《开发板镜像安装与升级手册_CN_v1.2.pdf》进行烧录
 
+1. 上电正常启动后会进入到normal Linux的终端登录界面中，通过用户名和密码：`eswin` 登录进入终端
+2. 进入终端后位于`/home/eswin`目录下，可以查看到当前目录有一个`penglai-files`目录，包含secure linux的镜像、penglai驱动和相关启动程序
+    ```bash
+    eswin@rockos-eswin:~$ ls
+    penglai
+    eswin@rockos-eswin:~$ cd penglai/
+    eswin@rockos-eswin:~/penglai$ ls
+    eic7700-hifive-premier-p550.dtb  rootfs.cpio.gz  secure_rsa
+    host                             run.sh          test.bin
+    penglai_linux.ko                 sbi_print       test.css
+    remote                           secure_img.img  vmlinuz-6.6.18-eic7x
+    ```
+3. 启动secure linux
+    ```bash
+    eswin@rockos-eswin:~/penglai$ ./run.sh 
+    [sudo] password for eswin:
+    ……
+    脚本执行完毕。如果您需要，请按 Ctrl+C 退出。
+    ```
+    ![alt text](images/normal_secure.png)
+    左侧为secure linux环境，右侧为normal linux环境
+
+3. 若没有使用对应串口，启动后可以在normal linux侧通过ssh连接到secure linux,secure linux的默认登录用户名为`root`,登录密码为`penglai`
+    ```bash
+    cd ~/penglai
+    ssh -i secure_rsa root@<secure linux ip> 
+    ```
+4. 在secure侧执行简单的java程序
+    ```plain 
+    #cd ~/
+    #java HelloWorld
+    Hello,World!
+    ```
 
 ## secure Linux安全连接和通信
 
@@ -121,7 +157,7 @@ gunzip /rootfs.cpio.gz
 mkdir -p secure_fs && cd secure_fs
 sudo cpio -id < ../rootfs.cpio
 #更新文件权限，注意替换{cur_user}为当前用户
-sudo chown -R {cur_user}:{cur_user} dev bin/ etc/ lib mnt proc root sbin sys tmp usr var opt run media
+sudo chown -R {cur_user}:{cur_user} dev bin etc lib mnt proc root sbin sys tmp usr var opt run media
 sudo chmod 777 dev bin etc lib mnt proc root sbin sys tmp usr var opt run media
 #注意ssh启动需要
 sudo chown root:root var/empty
