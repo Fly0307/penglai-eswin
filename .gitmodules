@@ -1,0 +1,16 @@
+[submodule "source/opensbi-eswin"]
+	path = source/opensbi-eswin
+	url = https://github.com/Fly0307/opensbi-eswin.git
+	branch = penglai-eswin
+[submodule "source/linux-eswin"]
+	path = source/linux-eswin
+	url = https://github.com/Fly0307/linux-stable-eswin.git
+	branch = normal-linux
+[submodule "source/uboot-eswin"]
+	path = source/uboot-eswin
+	url = https://github.com/Fly0307/u-boot-eswin.git
+	branch = secure-boot
+[submodule "source/secure-linux-eswin"]
+	path = source/secure-linux-eswin
+	url = https://github.com/Fly0307/linux-stable-eswin.git
+	branch = secure-linux

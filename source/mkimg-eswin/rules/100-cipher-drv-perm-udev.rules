@@ -1,0 +1,1 @@
+KERNEL=="eswin_ipc_misc_dev*",MODE="0666"

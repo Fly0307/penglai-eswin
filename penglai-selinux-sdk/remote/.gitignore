@@ -1,0 +1,4 @@
+remote
+*.dump
+*.o
+*.S

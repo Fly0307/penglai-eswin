@@ -1,0 +1,3 @@
+KERNEL=="mmz_vb",MODE="0666"
+KERNEL=="mmz_nid_0_part_0",MODE="0666"
+KERNEL=="perf_count",MODE="0666"
