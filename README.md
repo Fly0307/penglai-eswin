@@ -7,8 +7,7 @@
 
 ## 仓库结构
 
-需要编译的 Artifacts 包括
-
+需要编译的 Artifacts 包括 opensbi 固件、 normal Linux镜像和secure Linux镜像。
 
 
 ## 运行测试
@@ -17,10 +16,12 @@
 
 克隆代码仓库，更新子模块，并安装编译所需依赖。
 ```bash
-git clone https://github.com/Shang-QY/Penglai-secure-world.git
+git clone https://github.com/Fly0307/penglai-eswin.git
 cd penglai-eswin
 git submodule update --init --recursive
 ```
+
+确保本地有相关的交叉编译工具，脚本中默认使用riscv64-linux-gnu-gcc(gcc version 11.4.0)
 
 主要的编译指令都已通过脚本实现，进入工作目录`penglai-eswin`按照如下指令依次运行
 
