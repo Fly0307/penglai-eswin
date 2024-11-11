@@ -115,14 +115,19 @@ root-HF106-{build_date}-{build_tiem}.ext4
     ……
     脚本执行完毕。如果您需要，请按 Ctrl+C 退出。
     ```
-    ![alt text](images/normal_secure.png)
-    左侧为secure linux环境，右侧为normal linux环境
+    ![board](images/board.png)
+    ![normal_secure shell](images/normal_secure.png)
+    左侧为secure linux环境（使用uart0），右侧为normal linux环境（使用uart3）
+    
 
 3. 若没有使用对应串口，启动后可以在normal linux侧通过ssh连接到secure linux,secure linux的默认登录用户名为`root`,登录密码为`penglai`
     ```bash
     cd ~/penglai
     ssh -i secure_rsa root@<secure linux ip> 
+    #注意检查私钥权限，需要为当前用户eswin 的600或400权限
+    #输入secure_rsa秘钥密码:penglaizone
     ```
+
 4. 在secure侧执行简单的java程序
     ```plain 
     #cd ~/
@@ -152,7 +157,7 @@ nameserver 223.5.5.5
 #下载secure Linux文件系统镜像
 cd ${WORK_DIR}
 wget -O rootfs.cpio.gz https://ipads.se.sjtu.edu.cn:1313/f/c0ec5102ece64f6dabb4/?dl=1
-gunzip /rootfs.cpio.gz
+gunzip ./rootfs.cpio.gz
 
 mkdir -p secure_fs && cd secure_fs
 sudo cpio -id < ../rootfs.cpio
@@ -186,3 +191,30 @@ make_mini_images
 ```
 
 重新参考烧录[镜像烧录启动](#镜像烧录启动)启动进行烧录。
+
+## 运行python程序
+
+当前已经提供了一个含有Python环境的secure 镜像：https://ipads.se.sjtu.edu.cn:1313/f/56dc252e21204e7581e6/
+
+[安全环境python程序运行说明](./docs/run_python.md)
+
+对应版本为`python3.11.10`,python包含以下基础库
+```bash
+Package            Version
+------------------ ----------
+certifi            2023.11.17
+charset-normalizer 3.3.2
+idna               3.6
+pip                23.3.2
+requests           2.31.0
+setuptools         69.0.3
+urllib3            2.0.7
+```
+注意：使用python环境需要手动pip安装相关库前，注意更新时间
+
+```bash
+#设置时间
+date -s 2024-11-11<注意使用当前时间>
+
+```
+

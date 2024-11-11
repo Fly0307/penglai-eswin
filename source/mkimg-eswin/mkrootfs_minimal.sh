@@ -63,16 +63,22 @@ make_rootfs_tarball()
 {
     # use $1
 #    PACKAGE_LIST="$KEYRINGS $GPU_DRIVER $BASE_TOOLS $GRAPHIC_TOOLS $XFCE_DESKTOP $BENCHMARK_TOOLS $FONTS $INCLUDE_APPS $EXTRA_TOOLS $LIBREOFFICE"
-    PACKAGE_LIST="ca-certificates cloud-guest-utils network-manager rockos-keyring u-boot-menu sudo initramfs-tools"
+    PACKAGE_LIST="ca-certificates cloud-guest-utils network-manager rockos-keyring u-boot-menu sudo initramfs-tools openssh-client"
     mmdebstrap --architectures=riscv64 \
         --include="$PACKAGE_LIST" \
         --skip check/empty \
         sid $1 \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-gles/ rockos-gles main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-media-new/ rockos-media-new main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-kernels/ rockos-kernels main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-addons/ rockos-addons main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/rockos-base/ sid main contrib non-free non-free-firmware"
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-gles/ rockos-gles main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-media-new/ rockos-media-new main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-kernels/ rockos-kernels main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-addons/ rockos-addons main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-base/ sid main contrib non-free non-free-firmware"
+
+        # "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-gles/ rockos-gles main" \
+        # "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-media-new/ rockos-media-new main" \
+        # "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-kernels/ rockos-kernels main" \
+        # "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-addons/ rockos-addons main" \
+        # "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/rockos-base/ sid main contrib non-free non-free-firmware"
 }
 
 make_rootfs()

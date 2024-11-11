@@ -30,10 +30,11 @@ rm -f run.sh
 echo "#!/bin/bash" > run.sh
 echo "sudo /usr/sbin/insmod penglai_linux.ko" >> run.sh
 echo "./host run -image secure_img.img -imageaddr 0xc0000000 -dtb eic7700-hifive-premier-p550.dtb -dtbaddr 0x186000000 -cssfile test.css" >> run.sh
-echo '# 添加持续输出的提示' >> run.sh
-echo 'while true; do' >> run.sh
-echo '    echo "启动执行完毕。如果您需要，请按 Ctrl+C 退出。"' >> run.sh
-echo '    sleep 3  # 暂停5秒再输出，避免不会刷屏' >> run.sh
+echo 'echo "启动执行完毕"' >> run.sh
+# echo '# 添加持续输出的提示' >> run.sh
+# echo 'while true; do' >> run.sh
+# echo '    echo "启动执行完毕。如果您需要，请按 Ctrl+C 退出。"' >> run.sh
+# echo '    sleep 3  # 暂停5秒再输出，避免不会刷屏' >> run.sh
 echo 'done' >> run.sh
 
 chmod +x run.sh
