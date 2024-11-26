@@ -9,6 +9,7 @@ CHROOT_TARGET=rootfs
 BOOT_UUID="44b7cb94-f58c-4ba6-bfa4-7d2dce09a3a5"
 ROOT_UUID="80a5a8e9-c744-491a-93c1-4f4194fd690a"
 BOARD=$1
+HOMEFILE="../penglai-files"
 
 if [ -f ../output/linux-image-*-dbg*.deb ];then
     echo debug kernel
@@ -63,15 +64,15 @@ make_rootfs_tarball()
 {
     # use $1
 #    PACKAGE_LIST="$KEYRINGS $GPU_DRIVER $BASE_TOOLS $GRAPHIC_TOOLS $XFCE_DESKTOP $BENCHMARK_TOOLS $FONTS $INCLUDE_APPS $EXTRA_TOOLS $LIBREOFFICE"
-    PACKAGE_LIST="ca-certificates cloud-guest-utils neofetch network-manager debian-archive-keyring u-boot-menu sudo initramfs-tools locales bluez blueman mpv chromium systemd-timesyncd"
+    PACKAGE_LIST="ca-certificates cloud-guest-utils neofetch network-manager debian-archive-keyring u-boot-menu sudo initramfs-tools locales bluez blueman mpv chromium systemd-timesyncd openssh-client"
     mmdebstrap --architectures=riscv64 \
         --include="$PACKAGE_LIST" \
         sid $1 \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-gles/ rockos-gles main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-media-new/ rockos-media-new main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-kernels/ rockos-kernels main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/dev/rockos-addons/ rockos-addons main" \
-        "deb [trusted=yes] https://rockos:HJcz78SxbyMGw42Ny8rM@mirror.iscas.ac.cn/rockos/rockos-base/ sid main contrib non-free non-free-firmware"
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-gles/ rockos-gles main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-media-new/ rockos-media-new main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-kernels/ rockos-kernels main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-addons/ rockos-addons main" \
+        "deb [trusted=yes]  https://mirror.iscas.ac.cn/rockos/20240830/rockos-base/ sid main contrib non-free non-free-firmware"
 
 #        "deb [trusted=yes] http://10.9.126.103:83/dev/rockos-kernels/ rockos-kernels main" \
 #        "deb [trusted=yes] http://10.9.126.103:83/dev/rockos-addons/ rockos-addons main" \
@@ -126,7 +127,7 @@ make_bootable()
     cat > $CHROOT_TARGET/etc/default/u-boot << EOF
 U_BOOT_PROMPT="2"
 U_BOOT_MENU_LABEL="RockOS GNU/Linux"
-U_BOOT_PARAMETERS="console=tty0 console=ttyS0,115200 root=UUID=${ROOT_UUID} rootwait rw earlycon selinux=0 LANG=en_US.UTF-8 audit=0"
+U_BOOT_PARAMETERS="console=tty3 console=tty3,115200 root=UUID=${ROOT_UUID} rootwait rw earlycon selinux=0 LANG=en_US.UTF-8 audit=0"
 U_BOOT_ROOT="root=UUID=${ROOT_UUID}"
 U_BOOT_FDT_DIR="/dtbs/linux-image-"
 EOF
@@ -192,6 +193,36 @@ echo "default-sample-rate = 48000" >> /etc/pulse/daemon.conf
 echo "alternate-sample-rate = 96000" >> /etc/pulse/daemon.conf
 sed -i 's/load-module module-udev-detect/load-module module-udev-detect tsched=1 tsched_buffer_size=8192/' /etc/pulse/system.pa
 sed -i 's/load-module module-udev-detect/load-module module-udev-detect tsched=1 tsched_buffer_size=8192/' /etc/pulse/default.pa
+exit
+EOF
+
+# Create a systemd service for running the script
+# cat << EOF > $CHROOT_TARGET/etc/systemd/system/run-penglai.service
+# [Unit]
+# Description=Run penglai script on startup
+# After=network.target multi-user.target
+
+# [Service]
+# Type=simple
+# User=eswin
+# WorkingDirectory=/home/eswin/penglai
+# ExecStart=/bin/bash ./run.sh
+# Restart=on-failure
+
+# [Install]
+# WantedBy=multi-user.target
+# EOF
+
+# Enable the service to start on boot
+# chroot "$CHROOT_TARGET" systemctl enable run-penglai.service
+
+    # media desktop
+    # Copy home files
+mkdir -p "$CHROOT_TARGET"/home/eswin/penglai
+cp -r $HOMEFILE/* "$CHROOT_TARGET"/home/eswin/penglai
+
+    chroot $CHROOT_TARGET /bin/bash << EOF
+chown -R eswin:eswin /home/eswin/penglai
 exit
 EOF
 

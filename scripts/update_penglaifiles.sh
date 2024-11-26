@@ -35,7 +35,7 @@ echo 'echo "启动执行完毕"' >> run.sh
 # echo 'while true; do' >> run.sh
 # echo '    echo "启动执行完毕。如果您需要，请按 Ctrl+C 退出。"' >> run.sh
 # echo '    sleep 3  # 暂停5秒再输出，避免不会刷屏' >> run.sh
-echo 'done' >> run.sh
+# echo 'done' >> run.sh
 
 chmod +x run.sh
 
