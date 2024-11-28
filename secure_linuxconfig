@@ -335,7 +335,7 @@ CONFIG_COMPAT=y
 #
 # CONFIG_CMDLINE="earlycon=sbi clk_ignore_unused cma_pernuma=0x2000000 disable_bypass=false firmware_class.path=/lib/firmware/eic7x/ console=tty0 console=ttyS0,115200 rootfstype=initramfs rootwait rw earlycon selinux=0 LANG=en_US.UTF-8 audit=0"
 #2个分区,加了home分区 /dev/sda2
-CONFIG_CMDLINE="earlycon=sbi clk_ignore_unused cma_pernuma=0x2000000 disable_bypass=false firmware_class.path=/lib/firmware/eic7x/ console=tty0 console=ttyS0,115200 root=/dev/sda1 rootfstype=ext4 rootwait rw earlycon selinux=0 LANG=en_US.UTF-8 audit=0"
+CONFIG_CMDLINE="earlycon=sbi clk_ignore_unused cma_pernuma=0x2000000 disable_bypass=false firmware_class.path=/lib/firmware/eic7x/ console=tty0 console=ttyS0,115200 root=/dev/sda1 rootfstype=ext4 rootwait rw earlycon selinux=0 LANG=en_US.UTF-8 audit=0 mem=5G@0xc0000000"
 # CONFIG_CMDLINE_FALLBACK is not set
 # CONFIG_CMDLINE_EXTEND is not set
 CONFIG_CMDLINE_FORCE=y
